@@ -5,11 +5,7 @@ import com.jpmc.booking.bookingapp.ui.AdminMenu;
 import com.jpmc.booking.bookingapp.ui.BuyerMenu;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public final class CommandScreenFactory
 {
 	//~ Constructors -----------------------------
@@ -17,8 +13,6 @@ public final class CommandScreenFactory
 	private CommandScreenFactory( ) { }
 	//~ Methods ----------------------------------
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   user
 	 * @return
 	 */

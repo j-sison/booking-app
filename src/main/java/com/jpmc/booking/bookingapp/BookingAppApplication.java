@@ -15,11 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 @SpringBootApplication
 public class BookingAppApplication implements CommandLineRunner
 {
@@ -30,15 +26,10 @@ public class BookingAppApplication implements CommandLineRunner
 	/**  */
 	private static final Logger LOGGER = LogManager.getLogger(BookingAppApplication.class);
 	//~ Methods ----------------------------------
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  args
-	 */
+	/** @param  args */
 	public static void main(String[] args)
 	{
 		SpringApplication.run(BookingAppApplication.class, args);
-		// TO DO autowiring, inject, scanBasePackages
 	}
 	
 	/** @param  args */

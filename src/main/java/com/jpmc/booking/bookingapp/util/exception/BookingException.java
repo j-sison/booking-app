@@ -1,10 +1,6 @@
 package com.jpmc.booking.bookingapp.util.exception;
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public class BookingException extends Exception
 {
 	//~ Static fields/initializers ---------------
@@ -36,29 +32,19 @@ public class BookingException extends Exception
 		setQuit(isQuit);
 	}
 	//~ Methods ----------------------------------
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public boolean isQuit()
 	{
 		return isQuit;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  isQuit
-	 */
+	/** @param  isQuit */
 	public void setQuit(boolean isQuit)
 	{
 		this.isQuit = isQuit;
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   message
 	 * @throws  BookingException
 	 */
@@ -67,10 +53,7 @@ public class BookingException extends Exception
 		throw new BookingException(message);
 	}
 	
-
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   message
 	 * @param   isQuit
 	 * @throws  BookingException

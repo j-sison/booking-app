@@ -1,10 +1,6 @@
 package com.jpmc.booking.bookingapp.vo;
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public class Seat
 {
 	//~ Instance fields --------------------------
@@ -33,31 +29,19 @@ public class Seat
 		this.isAvailable = true;
 	}
 	//~ Methods ----------------------------------
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public Show getShow()
 	{
 		return show;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public Booking getBooking()
 	{
 		return booking;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  booking
-	 */
+	/** @param  booking */
 	public void setBooking(Booking booking)
 	{
 		this.booking = booking;
@@ -67,47 +51,31 @@ public class Seat
 		}
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getSeatNumber()
 	{
 		return seatNumber;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public boolean isAvailable()
 	{
 		return isAvailable;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getSeatInfo()
 	{
 		return seatNumber;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getBuyerInfo()
 	{
 		return (booking == null) ? "" : (booking.getPhoneNumber() + " " + booking.getTicketNumber() + " " + seatNumber);
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	public void freeUp()
 	{
 		this.isAvailable = true;

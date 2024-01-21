@@ -6,11 +6,7 @@ import com.jpmc.booking.bookingapp.util.exception.BookingException;
 import java.io.IOException;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public class BuyerMenu extends AbstractMenu
 {
 	//~ Methods ----------------------------------

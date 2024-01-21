@@ -1,5 +1,6 @@
 package com.jpmc.booking.bookingapp.controller;
 
+import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.BookingManager;
 import com.jpmc.booking.bookingapp.util.ShowManager;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
@@ -10,17 +11,14 @@ import com.jpmc.booking.bookingapp.vo.Show;
 import java.util.List;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
-public class BuyerCommandProcessor
+/** @version  $Revision$, $Date$ */
+public final class BuyerCommandProcessor
 {
+	//~ Constructors -----------------------------
+	/** Creates a new BuyerCommandProcessor object. */
+	private BuyerCommandProcessor( ) { }
 	//~ Methods ----------------------------------
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   command
 	 * @throws  BookingException
 	 */
@@ -42,16 +40,15 @@ public class BuyerCommandProcessor
 		}
 		else if ("quit".compareToIgnoreCase(params[0]) == 0)
 		{
-			BookingException.throwException("Return to main menu", true);
+			BookingException.throwException(BookingConstant.ERROR_RETURN_TO_MAIN_MENU, true);
 		}
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  params
+	 * @param   params
+	 * @throws  BookingException
 	 */
-	private static void availability(String[] params)
+	private static void availability(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 
@@ -67,14 +64,17 @@ public class BuyerCommandProcessor
 				System.out.println(seat.getSeatInfo());
 			}
 		}
+		else
+		{
+			BookingException.throwException(BookingConstant.ERROR_SHOW_NOT_FOUND);
+		}
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  params
+	 * @param   params
+	 * @throws  BookingException
 	 */
-	private static void book(String[] params)
+	private static void book(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 		String phoneNumber = params[2];
@@ -105,8 +105,6 @@ public class BuyerCommandProcessor
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   params
 	 * @throws  BookingException
 	 */

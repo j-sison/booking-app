@@ -6,11 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public class Show
 {
 	//~ Instance fields --------------------------
@@ -36,7 +32,16 @@ public class Show
 		this.showNumber = showNumber;
 		this.cancelWindow = cancelWindow;
 
-		for (int rowCount = 65; rowCount <= (65 + numOfRows); rowCount++)
+		initSeats(numOfRows, numOfSeatsPerRow);
+	}
+	//~ Methods ----------------------------------
+	/**
+	 * @param  numOfRows
+	 * @param  numOfSeatsPerRow
+	 */
+	private void initSeats(int numOfRows, int numOfSeatsPerRow)
+	{
+		for (int rowCount = 65; rowCount < (65 + numOfRows); rowCount++)
 		{
 			for (int seatCount = 0; seatCount < numOfSeatsPerRow; seatCount++)
 			{
@@ -45,42 +50,26 @@ public class Show
 			}
 		}
 	}
-	//~ Methods ----------------------------------
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	
+	/** @return */
 	public int getCancelWindow()
 	{
 		return cancelWindow;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public ConcurrentHashMap<String, Seat> getSeats()
 	{
 		return seats;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getShowNumber()
 	{
 		return showNumber;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public List<Seat> getBookedSeats()
 	{
 		List<Seat> bookedSeats = seats.entrySet().stream().map(Map.Entry::getValue).filter(s -> !s.isAvailable())
@@ -91,11 +80,7 @@ public class Show
 		return bookedSeats;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public List<Seat> getAvailableSeats()
 	{
 		List<Seat> availableSeats = seats.entrySet().stream().map(Map.Entry::getValue).filter(s -> s.isAvailable())

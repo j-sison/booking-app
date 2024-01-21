@@ -1,5 +1,6 @@
 package com.jpmc.booking.bookingapp.controller;
 
+import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.ShowManager;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 import com.jpmc.booking.bookingapp.vo.Seat;
@@ -8,17 +9,14 @@ import com.jpmc.booking.bookingapp.vo.Show;
 import java.util.List;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
-public class AdminCommandProcessor
+/** @version  $Revision$, $Date$ */
+public final class AdminCommandProcessor
 {
+	//~ Constructors -----------------------------
+	/** Creates a new AdminCommandProcessor object. */
+	private AdminCommandProcessor( ) { }
 	//~ Methods ----------------------------------
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   command
 	 * @throws  BookingException
 	 */
@@ -41,11 +39,10 @@ public class AdminCommandProcessor
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  params
+	 * @param   params
+	 * @throws  BookingException
 	 */
-	private static void setup(String[] params)
+	private static void setup(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 		int numOfRows = Integer.parseInt(params[2]);
@@ -57,11 +54,10 @@ public class AdminCommandProcessor
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param  params
+	 * @param   params
+	 * @throws  BookingException
 	 */
-	private static void view(String[] params)
+	private static void view(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 
@@ -73,7 +69,7 @@ public class AdminCommandProcessor
 
 			if (bookedSeats.size() == 0)
 			{
-				System.out.println("There are no booked seats yet.");
+				System.out.println(BookingConstant.ERROR_THERE_ARE_NO_BOOKED_SEATS);
 			}
 			else
 			{
@@ -87,7 +83,7 @@ public class AdminCommandProcessor
 		}
 		else
 		{
-			System.err.println("Show not found.");
+			BookingException.throwException(BookingConstant.ERROR_SHOW_NOT_FOUND);
 		}
 	}
 }

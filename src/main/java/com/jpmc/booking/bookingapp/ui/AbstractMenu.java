@@ -11,11 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public abstract class AbstractMenu
 {
 	//~ Static fields/initializers ---------------
@@ -26,12 +22,10 @@ public abstract class AbstractMenu
 	BufferedReader reader = new BufferedReader(
 			new InputStreamReader(System.in));
 	//~ Methods ----------------------------------
-	/** DOCUMENT ME! */
+	/**  */
 	public abstract void inputCommand();
 	
 	/**
-	 * DOCUMENT ME!
-	 *
 	 * @param   command
 	 * @throws  BookingException
 	 */

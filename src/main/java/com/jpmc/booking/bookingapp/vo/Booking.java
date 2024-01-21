@@ -7,11 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
 
-/**
- * DOCUMENT ME!
- *
- * @version  $Revision$, $Date$
- */
+/** @version  $Revision$, $Date$ */
 public class Booking
 {
 	//~ Static fields/initializers ---------------
@@ -45,51 +41,31 @@ public class Booking
 		seat.setBooking(this);
 	}
 	//~ Methods ----------------------------------
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public Calendar getBookTime()
 	{
 		return bookTime;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public Seat getSeat()
 	{
 		return seat;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getPhoneNumber()
 	{
 		return phoneNumber;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public String getTicketNumber()
 	{
 		return ticketNumber;
 	}
 	
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
+	/** @return */
 	public boolean isWithinCancellationTime()
 	{
 		long minutes = ChronoUnit.MINUTES.between(bookTime.toInstant(), Calendar.getInstance().toInstant());
