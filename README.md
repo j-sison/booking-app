@@ -12,12 +12,12 @@ When admin user is selected, the following command are available:
    - This command displays the ticket #, phone # and seat numbers allocated to each buyer
    
 When buyer user is selected, the following command are available:
-(1) Availability <Show Number>
-- This command lists all available seat numbers for a show.
-(2) Book <Show Number> <Phone#> <Comma separated list of seats>
-- This command books a ticket which generates unique ticket # for each seats.
-(3) Cancel <Ticket#> <Phone#>
-- This command cancels a ticket as long as it is within the cancellation window
+1. Availability <Show Number>
+   - This command lists all available seat numbers for a show.
+2. Book <Show Number> <Phone#> <Comma separated list of seats>
+   - This command books a ticket which generates unique ticket # for each seats.
+3. Cancel <Ticket#> <Phone#>
+   - This command cancels a ticket as long as it is within the cancellation window
   
 Another command "quit" is available to all users which allows the user to return to the main menu.
 Any commands not mentioned here and those not following the right format will display the appropriate error to the user.
