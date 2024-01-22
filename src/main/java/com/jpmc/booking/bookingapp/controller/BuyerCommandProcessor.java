@@ -4,7 +4,6 @@ import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.BookingManager;
 import com.jpmc.booking.bookingapp.util.ShowManager;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
-import com.jpmc.booking.bookingapp.vo.Booking;
 import com.jpmc.booking.bookingapp.vo.Seat;
 import com.jpmc.booking.bookingapp.vo.Show;
 
@@ -81,26 +80,13 @@ public final class BuyerCommandProcessor
 		String seatNumbers = params[3];
 		String[] seatNumberArr = seatNumbers.split(",");
 
-		StringBuilder messages = new StringBuilder();
-
 		Show show = ShowManager.retrieveShow(showNumber);
 
 		if (show != null)
 		{
-			for (String seatNum : seatNumberArr)
-			{
-				Seat seat = show.getSeats().get(seatNum);
-
-				if (seat == null)
-				{
-					messages.append("Seat not found: " + seatNum);
-				}
-				else
-				{
-					Booking booking = BookingManager.book(seat, phoneNumber);
-					System.out.println("Booking as been created. Ticket number: " + booking.getTicketNumber());
-				}
-			}
+			String ticketNumber = BookingManager.generateTicket(showNumber);
+			BookingManager.book(show, seatNumberArr, phoneNumber, ticketNumber);
+			System.out.println("Booking as been created. Ticket number: " + ticketNumber);
 		}
 	}
 	
@@ -113,7 +99,20 @@ public final class BuyerCommandProcessor
 		String ticketNumber = params[1];
 		String phoneNumber = params[2];
 
-		BookingManager.cancelBooking(ticketNumber, phoneNumber);
+		String showNumber = parseShowNumber(ticketNumber);
+
+		BookingManager.cancelBooking(showNumber, ticketNumber, phoneNumber);
 		System.out.println("Ticket has been cancelled.");
+	}
+	
+	/**
+	 * @param   ticketNumber
+	 * @return
+	 */
+	private static String parseShowNumber(String ticketNumber)
+	{
+		String[] ticketArr = ticketNumber.split("-");
+
+		return ticketArr[0];
 	}
 }

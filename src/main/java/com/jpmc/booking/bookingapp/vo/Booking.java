@@ -1,7 +1,5 @@
 package com.jpmc.booking.bookingapp.vo;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.time.temporal.ChronoUnit;
 
 import java.util.Calendar;
@@ -10,9 +8,6 @@ import java.util.Calendar;
 /** @version  $Revision$, $Date$ */
 public class Booking
 {
-	//~ Static fields/initializers ---------------
-	/**  */
-	private static int ticketCounter;
 	//~ Instance fields --------------------------
 	/**  */
 	private Calendar bookTime;
@@ -31,11 +26,12 @@ public class Booking
 	 *
 	 * @param  seat
 	 * @param  phoneNumber
+	 * @param  ticketNumber
 	 */
-	public Booking(Seat seat, String phoneNumber)
+	public Booking(Seat seat, String phoneNumber, String ticketNumber)
 	{
 		this.phoneNumber = phoneNumber;
-		this.ticketNumber = "TICKET#" + StringUtils.leftPad(String.valueOf(++Booking.ticketCounter), 8, "0");
+		this.ticketNumber = ticketNumber;
 		this.bookTime = Calendar.getInstance();
 		this.seat = seat;
 		seat.setBooking(this);

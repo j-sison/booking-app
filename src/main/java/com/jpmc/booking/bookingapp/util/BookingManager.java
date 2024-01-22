@@ -3,7 +3,11 @@ package com.jpmc.booking.bookingapp.util;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 import com.jpmc.booking.bookingapp.vo.Booking;
 import com.jpmc.booking.bookingapp.vo.Seat;
+import com.jpmc.booking.bookingapp.vo.Show;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,13 +17,13 @@ public final class BookingManager
 {
 	//~ Static fields/initializers ---------------
 	/**  */
-	private static ConcurrentHashMap<String, Booking> bookingList = new ConcurrentHashMap<>();
-
-	/**  */
-	private static ConcurrentHashMap<String, List<String>> usedPhoneNumber = new ConcurrentHashMap<>();
+	private static int ticketCounter;
 	//~ Methods ----------------------------------
 	/**
+	 * @param   show
+	 * @param   seatNumberArr
 	 * @param   seat
+	 * @param   ticketNumber
 	 * @param   showNumber
 	 * @param   numOfRows
 	 * @param   numOfSeatsPerRow
@@ -27,55 +31,83 @@ public final class BookingManager
 	 * @return
 	 * @throws  BookingException
 	 */
-	public static Booking book(Seat seat, String phoneNumber) throws BookingException
+	public static void book(Show show, String[] seatNumberArr, String phoneNumber, String ticketNumber)
+		throws BookingException
 	{
-		Booking booking = null;
-		// if (!usedPhoneNumber.contains(phoneNumber)
-		// && ((usedPhoneNumber.get(phoneNumber) != null)
-		// && !usedPhoneNumber.get(phoneNumber).contains(seat.getShow().getShowNumber())))
-		// {
-		booking = new Booking(seat, phoneNumber);
-		bookingList.put(booking.getTicketNumber(), booking);
-		//      usedPhoneNumber.get(phoneNumber).add(seat.getShow().getShowNumber());     }     else     {
-		//          BookingException.throwException("Only one booking per phone # is allowed per show.");     }
+		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
+		StringBuilder messages = new StringBuilder();
+		if (!bookingList.contains(phoneNumber))
+		{
+			bookingList.put(phoneNumber, new ArrayList<Booking>());
+			for (String seatNum : seatNumberArr)
+			{
+				Seat seat = show.getSeats().get(seatNum);
+
+				if (seat == null)
+				{
+					messages.append("Seat not found: " + seatNum);
+				}
+				else
+				{
+					Booking booking = new Booking(seat, phoneNumber, ticketNumber);
+					bookingList.get(phoneNumber).add(booking);
+					System.out.println("Booking as been created. Ticket number: " + booking.getTicketNumber());
+				}
+			}
+		}
+		else
+		{
+			BookingException.throwException("Only one booking per phone # is allowed per show.");
+		}
+	}
+	
+	/**
+	 * @param   showNumber
+	 * @param   showNumber
+	 * @return
+	 * @throws  BookingException
+	 */
+	public static List<Booking> retrieveBooking(String showNumber, String ticketNumber, String phoneNumber)
+		throws BookingException
+	{
+		Show show = ShowManager.retrieveShow(showNumber);
+
+		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
+		List<Booking> booking = bookingList.get(phoneNumber);
 
 		return booking;
 	}
 	
 	/**
 	 * @param   showNumber
-	 * @return
-	 * @throws  BookingException
-	 */
-	public static Booking retrieveBooking(String ticketNumber, String phoneNumber) throws BookingException
-	{
-		Booking booking = bookingList.get(ticketNumber);
-
-		if (!booking.getPhoneNumber().equals(phoneNumber))
-		{
-			BookingException.throwException("Error: Ticket and Phone number has no match.");
-		}
-
-		return booking;
-	}
-	
-	/**
 	 * @param   ticketNumber
 	 * @param   phoneNumber
 	 * @throws  BookingException
 	 */
-	public static void cancelBooking(String ticketNumber, String phoneNumber) throws BookingException
+	public static void cancelBooking(String showNumber, String ticketNumber, String phoneNumber) throws BookingException
 	{
-		Booking booking = retrieveBooking(ticketNumber, phoneNumber);
+		List<Booking> bookingList = retrieveBooking(showNumber, ticketNumber, phoneNumber);
 
-		if (booking.isWithinCancellationTime())
+		for (Booking booking : bookingList)
 		{
-			bookingList.remove(booking.getTicketNumber());
-			booking.getSeat().freeUp();
+			if (booking.isWithinCancellationTime())
+			{
+				bookingList.remove(booking);
+				booking.getSeat().freeUp();
+			}
+			else
+			{
+				BookingException.throwException("Error: Cancellation is no longer allowed.");
+			}
 		}
-		else
-		{
-			BookingException.throwException("Error: Cancellation is no longer allowed.");
-		}
+	}
+	
+	/**
+	 * @param   showNumber
+	 * @return
+	 */
+	public static String generateTicket(String showNumber)
+	{
+		return showNumber + "-" + StringUtils.leftPad(String.valueOf(++ticketCounter), 8, "0");
 	}
 }

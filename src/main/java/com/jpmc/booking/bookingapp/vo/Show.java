@@ -11,6 +11,9 @@ public class Show
 {
 	//~ Instance fields --------------------------
 	/**  */
+	private ConcurrentHashMap<String, List<Booking>> bookingList = new ConcurrentHashMap<>();
+
+	/**  */
 	private int cancelWindow;
 
 	/**  */
@@ -35,6 +38,12 @@ public class Show
 		initSeats(numOfRows, numOfSeatsPerRow);
 	}
 	//~ Methods ----------------------------------
+	/** @return */
+	public ConcurrentHashMap<String, List<Booking>> getBookingList()
+	{
+		return bookingList;
+	}
+	
 	/**
 	 * @param  numOfRows
 	 * @param  numOfSeatsPerRow
