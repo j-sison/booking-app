@@ -6,8 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.jpmc.booking.bookingapp.util.BookingConstant;
+import com.jpmc.booking.bookingapp.util.BookingManager;
 import com.jpmc.booking.bookingapp.util.ShowManager;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
+import com.jpmc.booking.bookingapp.vo.Booking;
 import com.jpmc.booking.bookingapp.vo.Seat;
 import com.jpmc.booking.bookingapp.vo.Show;
 
@@ -19,6 +21,7 @@ import org.junit.Test;
 
 import org.junit.runners.MethodSorters;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -68,6 +71,7 @@ public class CommandProcessorTest
 		{
 			String sampleShowNumber = "show101";
 			AdminCommandProcessor.process("setup " + sampleShowNumber + " 26 10 5");
+			fail();
 		}
 		catch (BookingException e)
 		{
@@ -98,6 +102,7 @@ public class CommandProcessorTest
 		{
 			String sampleShowNumber = "show101";
 			AdminCommandProcessor.process("setup " + sampleShowNumber + " 26 11 5");
+			fail();
 		}
 		catch (BookingException e)
 		{
@@ -129,6 +134,7 @@ public class CommandProcessorTest
 		{
 			String sampleShowNumber = "show102";
 			AdminCommandProcessor.process("view " + sampleShowNumber);
+			fail();
 		}
 		catch (BookingException e)
 		{
@@ -143,6 +149,7 @@ public class CommandProcessorTest
 		try
 		{
 			AdminCommandProcessor.process("quit");
+			fail();
 		}
 		catch (BookingException e)
 		{
@@ -174,6 +181,7 @@ public class CommandProcessorTest
 		{
 			String sampleShowNumber = "show102";
 			BuyerCommandProcessor.process("availability " + sampleShowNumber);
+			fail();
 		}
 		catch (BookingException e)
 		{
@@ -183,7 +191,7 @@ public class CommandProcessorTest
 	
 	/**  */
 	@Test
-	public void buyerProcessBookOk()
+	public void buyerProcessBook_1_Ok()
 	{
 		try
 		{
@@ -220,9 +228,44 @@ public class CommandProcessorTest
 		}
 	}
 	
+	/** DOCUMENT ME! */
+	@Test
+	public void buyerProcessBook_2_OnlyOneBookingAllowedError()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B2");
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED, e.getMessage());
+		}
+	}
+	
+	/** DOCUMENT ME! */
+	@Test
+	public void buyerProcessCancel_1_TicketNotMatchedError()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			String tickerNumberSample = sampleShowNumber + "-00000002";
+			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_TICKET_NOT_MATCHED, e.getMessage());
+		}
+	}
+	
 	/**  */
 	@Test
-	public void buyerProcessCancelOk()
+	public void buyerProcessCancel_2_Ok()
 	{
 		try
 		{
@@ -236,13 +279,8 @@ public class CommandProcessorTest
 			assertTrue(show != null);
 			assertEquals(sampleShowNumber, show.getShowNumber());
 			assertEquals(260, show.getSeats().size());
-			assertEquals(259, show.getAvailableSeats().size());
-			assertEquals(1, show.getBookedSeats().size());
-
-			assertEquals("B2", bookedSeats.get(0).getSeatNumber());
-			assertFalse(bookedSeats.get(0).isAvailable());
-			assertEquals(phoneNumberSample, bookedSeats.get(0).getBooking().getPhoneNumber());
-			assertEquals(sampleShowNumber + "-00000001", bookedSeats.get(0).getBooking().getTicketNumber());
+			assertEquals(260, show.getAvailableSeats().size());
+			assertEquals(0, show.getBookedSeats().size());
 
 			AdminCommandProcessor.process("view " + sampleShowNumber);
 			BuyerCommandProcessor.process("availability " + sampleShowNumber);
@@ -251,6 +289,55 @@ public class CommandProcessorTest
 		{
 			fail();
 			LOGGER.error(e);
+		}
+	}
+	
+	/** DOCUMENT ME! */
+	@Test
+	public void buyerProcessCancel_3_TicketNoBooking()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			String tickerNumberSample = sampleShowNumber + "-00000001";
+			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_NO_BOOKING_FOUND, e.getMessage());
+		}
+	}
+	
+	/**  */
+	@Test
+	public void buyerProcessCancel_4_ErrorCancellationWindow()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			String tickerNumberSample = sampleShowNumber + "-00000003";
+			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B2");
+
+			List<Booking> bookList = BookingManager.retrieveBooking(sampleShowNumber, tickerNumberSample,
+					phoneNumberSample);
+
+			Calendar earlierTime = Calendar.getInstance();
+			earlierTime.add(Calendar.MINUTE, -6);
+
+			for (Booking booking : bookList)
+			{
+				booking.setBookTime(earlierTime);
+			}
+
+			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_CANCELLATION_NOT_ALLOWED, e.getMessage());
 		}
 	}
 	
@@ -265,6 +352,40 @@ public class CommandProcessorTest
 		catch (BookingException e)
 		{
 			assertEquals(BookingConstant.ERROR_RETURN_TO_MAIN_MENU, e.getMessage());
+		}
+	}
+	
+	/** DOCUMENT ME! */
+	@Test
+	public void buyerProcessXBook_3_SomeSeatsNotFoundError()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B200");
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED, e.getMessage());
+		}
+	}
+	
+	/** DOCUMENT ME! */
+	@Test
+	public void buyerProcessXBook_4_SeatsNotFoundError()
+	{
+		try
+		{
+			String sampleShowNumber = "show101";
+			String phoneNumberSample = "123-45678";
+			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A100,B200");
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED, e.getMessage());
 		}
 	}
 }

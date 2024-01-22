@@ -24,7 +24,7 @@ public final class ShowManager
 		throws BookingException
 	{
 		validateMaxSeats(numOfRows, numOfSeatsPerRow);
-		if (!shows.contains(showNumber))
+		if (!shows.containsKey(showNumber))
 		{
 			shows.put(showNumber, new Show(showNumber, numOfRows, numOfSeatsPerRow, cancelWindow));
 		}

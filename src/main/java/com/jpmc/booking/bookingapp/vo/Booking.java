@@ -43,6 +43,17 @@ public class Booking
 		return bookTime;
 	}
 	
+
+	/**
+	 * DOCUMENT ME!
+	 *
+	 * @param  bookTime
+	 */
+	public void setBookTime(Calendar bookTime)
+	{
+		this.bookTime = bookTime;
+	}
+	
 	/** @return */
 	public Seat getSeat()
 	{

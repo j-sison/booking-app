@@ -30,13 +30,16 @@ public final class BookingManager
 	 * @param   cancelWindow
 	 * @return
 	 * @throws  BookingException
+	 * @throws  SeatNotFoundException
 	 */
 	public static void book(Show show, String[] seatNumberArr, String phoneNumber, String ticketNumber)
 		throws BookingException
 	{
 		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
 		StringBuilder messages = new StringBuilder();
-		if (!bookingList.contains(phoneNumber))
+		boolean bookOK = false;
+		if (!bookingList.containsKey(phoneNumber)
+			|| (bookingList.containsKey(phoneNumber) && bookingList.get(phoneNumber).isEmpty()))
 		{
 			bookingList.put(phoneNumber, new ArrayList<Booking>());
 			for (String seatNum : seatNumberArr)
@@ -45,19 +48,32 @@ public final class BookingManager
 
 				if (seat == null)
 				{
-					messages.append("Seat not found: " + seatNum);
+					messages.append(seatNum + " ");
 				}
 				else
 				{
 					Booking booking = new Booking(seat, phoneNumber, ticketNumber);
 					bookingList.get(phoneNumber).add(booking);
-					System.out.println("Booking as been created. Ticket number: " + booking.getTicketNumber());
+					bookOK = true;
 				}
 			}
 		}
 		else
 		{
-			BookingException.throwException("Only one booking per phone # is allowed per show.");
+			BookingException.throwException(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED);
+		}
+
+		if (!messages.toString().isEmpty())
+		{
+			if (bookOK)
+			{
+				BookingException.throwException("Booking as been created. Ticket number: " + ticketNumber
+					+ "\nSome seats were not found: " + messages.toString());
+			}
+			else
+			{
+				BookingException.throwException("Seats not found." + messages.toString());
+			}
 		}
 	}
 	
@@ -88,18 +104,30 @@ public final class BookingManager
 	{
 		List<Booking> bookingList = retrieveBooking(showNumber, ticketNumber, phoneNumber);
 
+		if ((bookingList == null) || bookingList.isEmpty())
+		{
+			BookingException.throwException(BookingConstant.ERROR_NO_BOOKING_FOUND);
+		}
+
+		boolean isWithinCancellationTime = bookingList.get(0).isWithinCancellationTime();
+		boolean isTicketNumberCorrect = ticketNumber.equals(bookingList.get(0).getTicketNumber());
+
 		for (Booking booking : bookingList)
 		{
-			if (booking.isWithinCancellationTime())
+			if (!isTicketNumberCorrect)
 			{
-				bookingList.remove(booking);
-				booking.getSeat().freeUp();
+				BookingException.throwException(BookingConstant.ERROR_TICKET_NOT_MATCHED);
+			}
+			else if (!isWithinCancellationTime)
+			{
+				BookingException.throwException(BookingConstant.ERROR_CANCELLATION_NOT_ALLOWED);
 			}
 			else
 			{
-				BookingException.throwException("Error: Cancellation is no longer allowed.");
+				booking.getSeat().freeUp();
 			}
 		}
+		bookingList.removeAll(bookingList);
 	}
 	
 	/**

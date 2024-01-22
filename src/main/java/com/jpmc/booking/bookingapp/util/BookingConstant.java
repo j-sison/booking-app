@@ -36,6 +36,18 @@ public final class BookingConstant
 
 	/**  */
 	public static final String ERROR_RETURN_TO_MAIN_MENU = "Return to main menu";
+
+	/**  */
+	public static final String ERROR_NO_BOOKING_FOUND = "Error: There are no booking for the phone number.";
+
+	/**  */
+	public static final String ERROR_TICKET_NOT_MATCHED = "Error: Ticket Number doesn't not match";
+
+	/**  */
+	public static final String ERROR_CANCELLATION_NOT_ALLOWED = "Error: Cancellation is no longer allowed.";
+
+	/**  */
+	public static final String ERROR_ONLY_ONE_BOOKING_ALLOWED = "Only one booking per phone # is allowed per show.";
 	//~ Constructors -----------------------------
 	/** Creates a new BookingConstant object. */
 	private BookingConstant( ) { }
