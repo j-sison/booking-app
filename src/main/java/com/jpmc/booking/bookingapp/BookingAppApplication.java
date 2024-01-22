@@ -68,6 +68,6 @@ public class BookingAppApplication implements CommandLineRunner
 	 */
 	private boolean isValidUser(String user)
 	{
-		return VALID_USERS.contains(user);
+		return VALID_USERS.contains(user) && (user != null) && !user.isEmpty();
 	}
 }

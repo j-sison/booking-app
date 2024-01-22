@@ -46,7 +46,7 @@ public final class BookingManager
 			{
 				Seat seat = show.getSeats().get(seatNum);
 
-				if (seat == null)
+				if ((seat == null) || ((seat != null) && !seat.isAvailable()))
 				{
 					messages.append(seatNum + " ");
 				}
@@ -68,11 +68,11 @@ public final class BookingManager
 			if (bookOK)
 			{
 				BookingException.throwException("Booking as been created. Ticket number: " + ticketNumber
-					+ "\nSome seats were not found: " + messages.toString());
+					+ "\nSome seats were not found/already booked: " + messages.toString());
 			}
 			else
 			{
-				BookingException.throwException("Seats not found." + messages.toString());
+				BookingException.throwException("Seats not found/already booked." + messages.toString());
 			}
 		}
 	}
