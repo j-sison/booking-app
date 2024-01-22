@@ -88,6 +88,11 @@ public final class BookingManager
 	{
 		Show show = ShowManager.retrieveShow(showNumber);
 
+		if (show == null)
+		{
+			BookingException.throwException(BookingConstant.ERROR_SHOW_NOT_EXISTS);
+		}
+
 		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
 		List<Booking> booking = bookingList.get(phoneNumber);
 

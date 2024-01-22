@@ -228,7 +228,7 @@ public class CommandProcessorTest
 		}
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	@Test
 	public void buyerProcessBook_2_OnlyOneBookingAllowedError()
 	{
@@ -245,7 +245,7 @@ public class CommandProcessorTest
 		}
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	@Test
 	public void buyerProcessCancel_1_TicketNotMatchedError()
 	{
@@ -292,7 +292,7 @@ public class CommandProcessorTest
 		}
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	@Test
 	public void buyerProcessCancel_3_TicketNoBooking()
 	{
@@ -343,6 +343,24 @@ public class CommandProcessorTest
 	
 	/**  */
 	@Test
+	public void buyerProcessCancel_5_NonExistingShowError()
+	{
+		try
+		{
+			String sampleShowNumber = "show1001";
+			String phoneNumberSample = "123-45678";
+			String tickerNumberSample = sampleShowNumber + "-00000001";
+			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			fail();
+		}
+		catch (BookingException e)
+		{
+			assertEquals(BookingConstant.ERROR_SHOW_NOT_EXISTS, e.getMessage());
+		}
+	}
+	
+	/**  */
+	@Test
 	public void buyerProcessQuit()
 	{
 		try
@@ -355,7 +373,7 @@ public class CommandProcessorTest
 		}
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	@Test
 	public void buyerProcessXBook_3_SomeSeatsNotFoundError()
 	{
@@ -373,7 +391,7 @@ public class CommandProcessorTest
 		}
 	}
 	
-	/** DOCUMENT ME! */
+	/**  */
 	@Test
 	public void buyerProcessXBook_4_SeatsNotFoundError()
 	{

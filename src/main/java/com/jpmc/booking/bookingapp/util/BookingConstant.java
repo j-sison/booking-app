@@ -48,6 +48,9 @@ public final class BookingConstant
 
 	/**  */
 	public static final String ERROR_ONLY_ONE_BOOKING_ALLOWED = "Only one booking per phone # is allowed per show.";
+
+	/**  */
+	public static final String ERROR_SHOW_NOT_EXISTS = "Error: Show does not exist.";
 	//~ Constructors -----------------------------
 	/** Creates a new BookingConstant object. */
 	private BookingConstant( ) { }
