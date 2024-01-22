@@ -15,7 +15,8 @@ When buyer user is selected, the following command are available:
 1. Availability <Show Number>
    - This command lists all available seat numbers for a show.
 2. Book <Show Number> <Phone#> <Comma separated list of seats>
-   - This command books a ticket which generates unique ticket # for each seats.
+   - This command books a ticket which generates a single unique ticket #.
+   - Only one booking # per phone # is allowed per show
 3. Cancel <Ticket#> <Phone#>
    - This command cancels a ticket as long as it is within the cancellation window
   
