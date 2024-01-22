@@ -362,13 +362,14 @@ public class CommandProcessorTest
 		try
 		{
 			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
+			String phoneNumberSample = "123-45677";
 			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B200");
 			fail();
 		}
 		catch (BookingException e)
 		{
-			assertEquals(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED, e.getMessage());
+			assertEquals("Booking as been created. Ticket number: show101-00000004\n"
+				+ "Some seats were not found: B200 ", e.getMessage());
 		}
 	}
 	
@@ -379,13 +380,13 @@ public class CommandProcessorTest
 		try
 		{
 			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
+			String phoneNumberSample = "123-45676";
 			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A100,B200");
 			fail();
 		}
 		catch (BookingException e)
 		{
-			assertEquals(BookingConstant.ERROR_ONLY_ONE_BOOKING_ALLOWED, e.getMessage());
+			assertEquals("Seats not found.A100 B200 ", e.getMessage());
 		}
 	}
 }
