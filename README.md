@@ -18,6 +18,7 @@ When the buyer user is selected, the following commands are available:
    - This command books a ticket that generates a single unique ticket #.
    - Only one booking # per phone # is allowed per show
    - Only found seats will be booked if some seats are not found.
+   - User can only book existing shows and seats
 3. Cancel <Ticket#> <Phone#>
    - This command cancels a ticket as long as it is within the cancellation window
   
