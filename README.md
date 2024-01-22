@@ -21,6 +21,9 @@ When the buyer user is selected, the following commands are available:
    - User can only book existing shows and seats
 3. Cancel <Ticket#> <Phone#>
    - This command cancels a ticket as long as it is within the cancellation window
+   - User can only cancel booking if:
+     - Show exists
+     - Phone and Ticket # has existing booking
   
 Another command "quit" is available to all users which allows the user to return to the main menu.
 Any commands not mentioned here and those not following the right format will display the appropriate error to the user.
