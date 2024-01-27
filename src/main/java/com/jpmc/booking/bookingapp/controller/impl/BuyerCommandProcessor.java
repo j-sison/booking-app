@@ -1,5 +1,6 @@
-package com.jpmc.booking.bookingapp.controller;
+package com.jpmc.booking.bookingapp.controller.impl;
 
+import com.jpmc.booking.bookingapp.controller.ICommandProcessor;
 import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.BookingManager;
 import com.jpmc.booking.bookingapp.util.ShowManager;
@@ -7,21 +8,21 @@ import com.jpmc.booking.bookingapp.util.exception.BookingException;
 import com.jpmc.booking.bookingapp.vo.Seat;
 import com.jpmc.booking.bookingapp.vo.Show;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
 /** @version  $Revision$, $Date$ */
-public final class BuyerCommandProcessor
+@Service
+public class BuyerCommandProcessor implements ICommandProcessor
 {
-	//~ Constructors -----------------------------
-	/** Creates a new BuyerCommandProcessor object. */
-	private BuyerCommandProcessor( ) { }
 	//~ Methods ----------------------------------
 	/**
 	 * @param   command
 	 * @throws  BookingException
 	 */
-	public static void process(String command) throws BookingException
+	public void process(String command) throws BookingException
 	{
 		String[] params = command.split(" ");
 
@@ -47,11 +48,11 @@ public final class BuyerCommandProcessor
 	 * @param   params
 	 * @throws  BookingException
 	 */
-	private static void availability(String[] params) throws BookingException
+	private void availability(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 
-		Show show = ShowManager.retrieveShow(showNumber);
+		Show show = ShowManager.getInstance().retrieveShow(showNumber);
 
 		if (show != null)
 		{
@@ -60,7 +61,7 @@ public final class BuyerCommandProcessor
 			System.out.println("List of available seats under show: " + show.getShowNumber());
 			for (Seat seat : available)
 			{
-				System.out.println(seat.getSeatInfo());
+				System.out.println(seat.getSeatNumber());
 			}
 		}
 		else
@@ -73,19 +74,19 @@ public final class BuyerCommandProcessor
 	 * @param   params
 	 * @throws  BookingException
 	 */
-	private static void book(String[] params) throws BookingException
+	private void book(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 		String phoneNumber = params[2];
 		String seatNumbers = params[3];
 		String[] seatNumberArr = seatNumbers.split(",");
 
-		Show show = ShowManager.retrieveShow(showNumber);
+		Show show = ShowManager.getInstance().retrieveShow(showNumber);
 
 		if (show != null)
 		{
 			String ticketNumber = BookingManager.generateTicket(showNumber);
-			BookingManager.book(show, seatNumberArr, phoneNumber, ticketNumber);
+			BookingManager.getInstance().book(show, seatNumberArr, phoneNumber, ticketNumber);
 			System.out.println("Booking as been created. Ticket number: " + ticketNumber);
 		}
 	}
@@ -94,14 +95,14 @@ public final class BuyerCommandProcessor
 	 * @param   params
 	 * @throws  BookingException
 	 */
-	private static void cancel(String[] params) throws BookingException
+	private void cancel(String[] params) throws BookingException
 	{
 		String ticketNumber = params[1];
 		String phoneNumber = params[2];
 
 		String showNumber = parseShowNumber(ticketNumber);
 
-		BookingManager.cancelBooking(showNumber, ticketNumber, phoneNumber);
+		BookingManager.getInstance().cancelBooking(showNumber, ticketNumber, phoneNumber);
 		System.out.println("Ticket has been cancelled.");
 	}
 	
@@ -109,7 +110,7 @@ public final class BuyerCommandProcessor
 	 * @param   ticketNumber
 	 * @return
 	 */
-	private static String parseShowNumber(String ticketNumber)
+	private String parseShowNumber(String ticketNumber)
 	{
 		String[] ticketArr = ticketNumber.split("-");
 

@@ -8,18 +8,8 @@ public class BookingException extends Exception
 	private static final long serialVersionUID = 1L;
 	//~ Instance fields --------------------------
 	/**  */
-	private boolean isQuit;
+	private final boolean isQuit;
 	//~ Constructors -----------------------------
-	/**
-	 * Creates a new BookingException object.
-	 *
-	 * @param  message
-	 */
-	public BookingException(String message)
-	{
-		super(message);
-	}
-
 	/**
 	 * Creates a new BookingException object.
 	 *
@@ -28,8 +18,8 @@ public class BookingException extends Exception
 	 */
 	public BookingException(String message, boolean isQuit)
 	{
-		this(message);
-		setQuit(isQuit);
+		super(message);
+		this.isQuit = isQuit;
 	}
 	//~ Methods ----------------------------------
 	/** @return */
@@ -38,19 +28,13 @@ public class BookingException extends Exception
 		return isQuit;
 	}
 	
-	/** @param  isQuit */
-	public void setQuit(boolean isQuit)
-	{
-		this.isQuit = isQuit;
-	}
-	
 	/**
 	 * @param   message
 	 * @throws  BookingException
 	 */
 	public static void throwException(String message) throws BookingException
 	{
-		throw new BookingException(message);
+		throw new BookingException(message, false);
 	}
 	
 	/**

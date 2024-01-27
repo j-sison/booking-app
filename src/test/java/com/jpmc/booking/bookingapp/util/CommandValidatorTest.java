@@ -3,8 +3,8 @@ package com.jpmc.booking.bookingapp.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.jpmc.booking.bookingapp.ui.AdminMenu;
-import com.jpmc.booking.bookingapp.ui.BuyerMenu;
+import com.jpmc.booking.bookingapp.ui.impl.AdminMenu;
+import com.jpmc.booking.bookingapp.ui.impl.BuyerMenu;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 
 import org.apache.logging.log4j.LogManager;

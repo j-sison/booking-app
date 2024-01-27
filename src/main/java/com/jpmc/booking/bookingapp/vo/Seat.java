@@ -64,12 +64,6 @@ public class Seat
 	}
 	
 	/** @return */
-	public String getSeatInfo()
-	{
-		return seatNumber;
-	}
-	
-	/** @return */
 	public String getBuyerInfo()
 	{
 		return (booking == null) ? "" : (booking.getPhoneNumber() + " " + booking.getTicketNumber() + " " + seatNumber);

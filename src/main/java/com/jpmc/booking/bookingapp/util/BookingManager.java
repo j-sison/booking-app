@@ -18,7 +18,24 @@ public final class BookingManager
 	//~ Static fields/initializers ---------------
 	/**  */
 	private static int ticketCounter;
+
+	/**  */
+	private static BookingManager bookingManager;
+	//~ Constructors -----------------------------
+	/** Creates a new BookingManager object. */
+	private BookingManager( ) { }
 	//~ Methods ----------------------------------
+	/** @return */
+	public static BookingManager getInstance()
+	{
+		if (bookingManager == null)
+		{
+			bookingManager = new BookingManager();
+		}
+
+		return bookingManager;
+	}
+	
 	/**
 	 * @param   show
 	 * @param   seatNumberArr
@@ -32,21 +49,21 @@ public final class BookingManager
 	 * @throws  BookingException
 	 * @throws  SeatNotFoundException
 	 */
-	public static void book(Show show, String[] seatNumberArr, String phoneNumber, String ticketNumber)
-		throws BookingException
+	public void book(Show show, String[] seatNumberArr, String phoneNumber, String ticketNumber) throws BookingException
 	{
-		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
+		ConcurrentHashMap<String, List<Booking>> bookingList = (ConcurrentHashMap<String, List<Booking>>) show
+				.getBookingList();
 		StringBuilder messages = new StringBuilder();
 		boolean bookOK = false;
 		if (!bookingList.containsKey(phoneNumber)
 			|| (bookingList.containsKey(phoneNumber) && bookingList.get(phoneNumber).isEmpty()))
 		{
-			bookingList.put(phoneNumber, new ArrayList<Booking>());
+			bookingList.put(phoneNumber, new ArrayList<>());
 			for (String seatNum : seatNumberArr)
 			{
 				Seat seat = show.getSeats().get(seatNum);
 
-				if ((seat == null) || ((seat != null) && !seat.isAvailable()))
+				if ((seat == null) || (!seat.isAvailable()))
 				{
 					messages.append(seatNum + " ");
 				}
@@ -83,20 +100,19 @@ public final class BookingManager
 	 * @return
 	 * @throws  BookingException
 	 */
-	public static List<Booking> retrieveBooking(String showNumber, String ticketNumber, String phoneNumber)
-		throws BookingException
+	public List<Booking> retrieveBooking(String showNumber, String phoneNumber) throws BookingException
 	{
-		Show show = ShowManager.retrieveShow(showNumber);
+		Show show = ShowManager.getInstance().retrieveShow(showNumber);
 
 		if (show == null)
 		{
 			BookingException.throwException(BookingConstant.ERROR_SHOW_NOT_EXISTS);
 		}
 
-		ConcurrentHashMap<String, List<Booking>> bookingList = show.getBookingList();
-		List<Booking> booking = bookingList.get(phoneNumber);
+		ConcurrentHashMap<String, List<Booking>> bookingList = (ConcurrentHashMap<String, List<Booking>>) show
+				.getBookingList();
 
-		return booking;
+		return bookingList.get(phoneNumber);
 	}
 	
 	/**
@@ -105,9 +121,9 @@ public final class BookingManager
 	 * @param   phoneNumber
 	 * @throws  BookingException
 	 */
-	public static void cancelBooking(String showNumber, String ticketNumber, String phoneNumber) throws BookingException
+	public void cancelBooking(String showNumber, String ticketNumber, String phoneNumber) throws BookingException
 	{
-		List<Booking> bookingList = retrieveBooking(showNumber, ticketNumber, phoneNumber);
+		List<Booking> bookingList = retrieveBooking(showNumber, phoneNumber);
 
 		if ((bookingList == null) || bookingList.isEmpty())
 		{
@@ -132,7 +148,7 @@ public final class BookingManager
 				booking.getSeat().freeUp();
 			}
 		}
-		bookingList.removeAll(bookingList);
+		bookingList.clear();
 	}
 	
 	/**
@@ -141,6 +157,6 @@ public final class BookingManager
 	 */
 	public static String generateTicket(String showNumber)
 	{
-		return showNumber + "-" + StringUtils.leftPad(String.valueOf(++ticketCounter), 8, "0");
+		return showNumber + "-" + StringUtils.leftPad(String.valueOf(++BookingManager.ticketCounter), 8, "0");
 	}
 }

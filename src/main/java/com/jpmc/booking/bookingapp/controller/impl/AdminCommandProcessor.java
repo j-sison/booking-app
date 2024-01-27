@@ -1,26 +1,27 @@
-package com.jpmc.booking.bookingapp.controller;
+package com.jpmc.booking.bookingapp.controller.impl;
 
+import com.jpmc.booking.bookingapp.controller.ICommandProcessor;
 import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.ShowManager;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 import com.jpmc.booking.bookingapp.vo.Seat;
 import com.jpmc.booking.bookingapp.vo.Show;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
 /** @version  $Revision$, $Date$ */
-public final class AdminCommandProcessor
+@Service
+public class AdminCommandProcessor implements ICommandProcessor
 {
-	//~ Constructors -----------------------------
-	/** Creates a new AdminCommandProcessor object. */
-	private AdminCommandProcessor( ) { }
 	//~ Methods ----------------------------------
 	/**
 	 * @param   command
 	 * @throws  BookingException
 	 */
-	public static void process(String command) throws BookingException
+	public void process(String command) throws BookingException
 	{
 		String[] params = command.split(" ");
 
@@ -42,14 +43,14 @@ public final class AdminCommandProcessor
 	 * @param   params
 	 * @throws  BookingException
 	 */
-	private static void setup(String[] params) throws BookingException
+	private void setup(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 		int numOfRows = Integer.parseInt(params[2]);
 		int numOfSeatsPerRow = Integer.parseInt(params[3]);
 		int cancelWindow = Integer.parseInt(params[4]);
 
-		ShowManager.setup(showNumber, numOfRows, numOfSeatsPerRow, cancelWindow);
+		ShowManager.getInstance().setup(showNumber, numOfRows, numOfSeatsPerRow, cancelWindow);
 		System.out.println("Show has been created.");
 	}
 	
@@ -57,17 +58,17 @@ public final class AdminCommandProcessor
 	 * @param   params
 	 * @throws  BookingException
 	 */
-	private static void view(String[] params) throws BookingException
+	private void view(String[] params) throws BookingException
 	{
 		String showNumber = params[1];
 
-		Show show = ShowManager.retrieveShow(showNumber);
+		Show show = ShowManager.getInstance().retrieveShow(showNumber);
 
 		if (show != null)
 		{
 			List<Seat> bookedSeats = show.getBookedSeats();
 
-			if (bookedSeats.size() == 0)
+			if (bookedSeats.isEmpty())
 			{
 				System.out.println(BookingConstant.ERROR_THERE_ARE_NO_BOOKED_SEATS);
 			}

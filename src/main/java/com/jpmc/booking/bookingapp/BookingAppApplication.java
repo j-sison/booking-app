@@ -52,7 +52,7 @@ public class BookingAppApplication implements CommandLineRunner
 				{
 					continue;
 				}
-				AbstractMenu cmd = CommandScreenFactory.getCommandScreen(user);
+				AbstractMenu cmd = CommandScreenFactory.getInstance().getCommandScreen(user);
 				cmd.inputCommand();
 			}
 		}
