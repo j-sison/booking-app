@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.jpmc.booking.bookingapp.controller.impl.AdminCommandProcessor;
+import com.jpmc.booking.bookingapp.controller.impl.BuyerCommandProcessor;
 import com.jpmc.booking.bookingapp.util.BookingConstant;
 import com.jpmc.booking.bookingapp.util.BookingManager;
 import com.jpmc.booking.bookingapp.util.ShowManager;
@@ -31,7 +33,40 @@ public class CommandProcessorTest
 {
 	//~ Static fields/initializers ---------------
 	/**  */
+	private static final String SAMPLE_SHOW_NUMBER = "show101";
+
+	/**  */
+	private static final String SETUP = "setup ";
+
+	/**  */
+	private static final String SAMPLE_TICKET_NUMBER = "-00000001";
+
+	/**  */
+	private static final String VIEW = "view ";
+
+	/**  */
+	private static final String AVAILABILITY = "availability ";
+
+	/**  */
+	private static final String CANCEL = "cancel ";
+
+	/**  */
+	private static final String PHONE_NUMBER_SAMPLE = "123-45678";
+
+	/**  */
+	private static final String BOOK = "book ";
+
+	/**  */
+	private static final String SAMPLE_SEAT_NUMBER = " A1,B2";
+
+	/**  */
 	private static final Logger LOGGER = LogManager.getLogger(CommandProcessorTest.class);
+	//~ Instance fields --------------------------
+	/**  */
+	private AdminCommandProcessor adminCommandProcessor = new AdminCommandProcessor();
+
+	/**  */
+	private BuyerCommandProcessor buyerCommandProcessor = new BuyerCommandProcessor();
 	//~ Methods ----------------------------------
 	/**  */
 	@Test
@@ -39,13 +74,12 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			AdminCommandProcessor.process("setup " + sampleShowNumber + " 26 10 5");
+			adminCommandProcessor.process(SETUP + SAMPLE_SHOW_NUMBER + " 26 10 5");
 
-			Show show = ShowManager.retrieveShow(sampleShowNumber);
+			Show show = ShowManager.getInstance().retrieveShow(SAMPLE_SHOW_NUMBER);
 			List<Seat> availableSeats = show.getAvailableSeats();
 			assertTrue(show != null);
-			assertEquals(sampleShowNumber, show.getShowNumber());
+			assertEquals(SAMPLE_SHOW_NUMBER, show.getShowNumber());
 			assertEquals(260, show.getSeats().size());
 			assertEquals(260, availableSeats.size());
 			assertEquals(0, show.getBookedSeats().size());
@@ -69,8 +103,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			AdminCommandProcessor.process("setup " + sampleShowNumber + " 26 10 5");
+			adminCommandProcessor.process(SETUP + SAMPLE_SHOW_NUMBER + " 26 10 5");
 			fail();
 		}
 		catch (BookingException e)
@@ -85,8 +118,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			AdminCommandProcessor.process("setup " + sampleShowNumber + " 27 10 5");
+			adminCommandProcessor.process(SETUP + SAMPLE_SHOW_NUMBER + " 27 10 5");
 		}
 		catch (BookingException e)
 		{
@@ -100,8 +132,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			AdminCommandProcessor.process("setup " + sampleShowNumber + " 26 11 5");
+			adminCommandProcessor.process(SETUP + SAMPLE_SHOW_NUMBER + " 26 11 5");
 			fail();
 		}
 		catch (BookingException e)
@@ -116,8 +147,8 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			AdminCommandProcessor.process("view " + sampleShowNumber);
+			String sampleShowNumber = SAMPLE_SHOW_NUMBER;
+			adminCommandProcessor.process(VIEW + sampleShowNumber);
 		}
 		catch (BookingException e)
 		{
@@ -133,7 +164,7 @@ public class CommandProcessorTest
 		try
 		{
 			String sampleShowNumber = "show102";
-			AdminCommandProcessor.process("view " + sampleShowNumber);
+			adminCommandProcessor.process(VIEW + sampleShowNumber);
 			fail();
 		}
 		catch (BookingException e)
@@ -148,7 +179,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			AdminCommandProcessor.process("quit");
+			adminCommandProcessor.process("quit");
 			fail();
 		}
 		catch (BookingException e)
@@ -163,8 +194,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			BuyerCommandProcessor.process("availability " + sampleShowNumber);
+			buyerCommandProcessor.process(AVAILABILITY + SAMPLE_SHOW_NUMBER);
 		}
 		catch (BookingException e)
 		{
@@ -180,7 +210,7 @@ public class CommandProcessorTest
 		try
 		{
 			String sampleShowNumber = "show102";
-			BuyerCommandProcessor.process("availability " + sampleShowNumber);
+			buyerCommandProcessor.process(AVAILABILITY + sampleShowNumber);
 			fail();
 		}
 		catch (BookingException e)
@@ -195,14 +225,12 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B2");
+			buyerCommandProcessor.process(BOOK + SAMPLE_SHOW_NUMBER + " " + PHONE_NUMBER_SAMPLE + SAMPLE_SEAT_NUMBER);
 
-			Show show = ShowManager.retrieveShow(sampleShowNumber);
+			Show show = ShowManager.getInstance().retrieveShow(SAMPLE_SHOW_NUMBER);
 			List<Seat> bookedSeats = show.getBookedSeats();
 			assertTrue(show != null);
-			assertEquals(sampleShowNumber, show.getShowNumber());
+			assertEquals(SAMPLE_SHOW_NUMBER, show.getShowNumber());
 			assertEquals(260, show.getSeats().size());
 			assertEquals(258, show.getAvailableSeats().size());
 			assertEquals(2, show.getBookedSeats().size());
@@ -210,16 +238,16 @@ public class CommandProcessorTest
 			assertEquals("A1", bookedSeats.get(0).getSeatNumber());
 			assertEquals("B2", bookedSeats.get(1).getSeatNumber());
 
-			assertEquals(phoneNumberSample, bookedSeats.get(0).getBooking().getPhoneNumber());
-			assertEquals(phoneNumberSample, bookedSeats.get(1).getBooking().getPhoneNumber());
+			assertEquals(PHONE_NUMBER_SAMPLE, bookedSeats.get(0).getBooking().getPhoneNumber());
+			assertEquals(PHONE_NUMBER_SAMPLE, bookedSeats.get(1).getBooking().getPhoneNumber());
 			assertFalse(bookedSeats.get(0).isAvailable());
 			assertFalse(bookedSeats.get(1).isAvailable());
 
-			assertEquals(sampleShowNumber + "-00000001", bookedSeats.get(0).getBooking().getTicketNumber());
-			assertEquals(sampleShowNumber + "-00000001", bookedSeats.get(1).getBooking().getTicketNumber());
+			assertEquals(SAMPLE_SHOW_NUMBER + SAMPLE_TICKET_NUMBER, bookedSeats.get(0).getBooking().getTicketNumber());
+			assertEquals(SAMPLE_SHOW_NUMBER + SAMPLE_TICKET_NUMBER, bookedSeats.get(1).getBooking().getTicketNumber());
 
-			AdminCommandProcessor.process("view " + sampleShowNumber);
-			BuyerCommandProcessor.process("availability " + sampleShowNumber);
+			adminCommandProcessor.process(VIEW + SAMPLE_SHOW_NUMBER);
+			buyerCommandProcessor.process(AVAILABILITY + SAMPLE_SHOW_NUMBER);
 		}
 		catch (BookingException e)
 		{
@@ -234,9 +262,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B2");
+			buyerCommandProcessor.process(BOOK + SAMPLE_SHOW_NUMBER + " " + PHONE_NUMBER_SAMPLE + SAMPLE_SEAT_NUMBER);
 			fail();
 		}
 		catch (BookingException e)
@@ -251,10 +277,8 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			String tickerNumberSample = sampleShowNumber + "-00000002";
-			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			String tickerNumberSample = SAMPLE_SHOW_NUMBER + "-00000002";
+			buyerCommandProcessor.process(CANCEL + tickerNumberSample + " " + PHONE_NUMBER_SAMPLE);
 			fail();
 		}
 		catch (BookingException e)
@@ -269,21 +293,18 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			String tickerNumberSample = sampleShowNumber + "-00000001";
-			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			String tickerNumberSample = SAMPLE_SHOW_NUMBER + SAMPLE_TICKET_NUMBER;
+			buyerCommandProcessor.process(CANCEL + tickerNumberSample + " " + PHONE_NUMBER_SAMPLE);
 
-			Show show = ShowManager.retrieveShow(sampleShowNumber);
-			List<Seat> bookedSeats = show.getBookedSeats();
+			Show show = ShowManager.getInstance().retrieveShow(SAMPLE_SHOW_NUMBER);
 			assertTrue(show != null);
-			assertEquals(sampleShowNumber, show.getShowNumber());
+			assertEquals(SAMPLE_SHOW_NUMBER, show.getShowNumber());
 			assertEquals(260, show.getSeats().size());
 			assertEquals(260, show.getAvailableSeats().size());
 			assertEquals(0, show.getBookedSeats().size());
 
-			AdminCommandProcessor.process("view " + sampleShowNumber);
-			BuyerCommandProcessor.process("availability " + sampleShowNumber);
+			adminCommandProcessor.process(VIEW + SAMPLE_SHOW_NUMBER);
+			buyerCommandProcessor.process(AVAILABILITY + SAMPLE_SHOW_NUMBER);
 		}
 		catch (BookingException e)
 		{
@@ -298,10 +319,8 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			String tickerNumberSample = sampleShowNumber + "-00000001";
-			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			String tickerNumberSample = SAMPLE_SHOW_NUMBER + SAMPLE_TICKET_NUMBER;
+			buyerCommandProcessor.process(CANCEL + tickerNumberSample + " " + PHONE_NUMBER_SAMPLE);
 			fail();
 		}
 		catch (BookingException e)
@@ -316,13 +335,11 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
-			String phoneNumberSample = "123-45678";
-			String tickerNumberSample = sampleShowNumber + "-00000003";
-			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A1,B2");
+			String tickerNumberSample = SAMPLE_SHOW_NUMBER + "-00000003";
+			buyerCommandProcessor.process(BOOK + SAMPLE_SHOW_NUMBER + " " + PHONE_NUMBER_SAMPLE + SAMPLE_SEAT_NUMBER);
 
-			List<Booking> bookList = BookingManager.retrieveBooking(sampleShowNumber, tickerNumberSample,
-					phoneNumberSample);
+			List<Booking> bookList = BookingManager.getInstance().retrieveBooking(SAMPLE_SHOW_NUMBER,
+					PHONE_NUMBER_SAMPLE);
 
 			Calendar earlierTime = Calendar.getInstance();
 			earlierTime.add(Calendar.MINUTE, -6);
@@ -332,7 +349,7 @@ public class CommandProcessorTest
 				booking.setBookTime(earlierTime);
 			}
 
-			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			buyerCommandProcessor.process(CANCEL + tickerNumberSample + " " + PHONE_NUMBER_SAMPLE);
 			fail();
 		}
 		catch (BookingException e)
@@ -348,9 +365,8 @@ public class CommandProcessorTest
 		try
 		{
 			String sampleShowNumber = "show1001";
-			String phoneNumberSample = "123-45678";
-			String tickerNumberSample = sampleShowNumber + "-00000001";
-			BuyerCommandProcessor.process("cancel " + tickerNumberSample + " " + phoneNumberSample);
+			String tickerNumberSample = sampleShowNumber + SAMPLE_TICKET_NUMBER;
+			buyerCommandProcessor.process(CANCEL + tickerNumberSample + " " + PHONE_NUMBER_SAMPLE);
 			fail();
 		}
 		catch (BookingException e)
@@ -365,7 +381,7 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			BuyerCommandProcessor.process("quit");
+			buyerCommandProcessor.process("quit");
 		}
 		catch (BookingException e)
 		{
@@ -379,9 +395,9 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
+			String sampleShowNumber = SAMPLE_SHOW_NUMBER;
 			String phoneNumberSample = "123-45677";
-			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A10,B200");
+			buyerCommandProcessor.process(BOOK + sampleShowNumber + " " + phoneNumberSample + " A10,B200");
 			fail();
 		}
 		catch (BookingException e)
@@ -397,9 +413,9 @@ public class CommandProcessorTest
 	{
 		try
 		{
-			String sampleShowNumber = "show101";
+			String sampleShowNumber = SAMPLE_SHOW_NUMBER;
 			String phoneNumberSample = "123-45676";
-			BuyerCommandProcessor.process("book " + sampleShowNumber + " " + phoneNumberSample + " A100,B200");
+			buyerCommandProcessor.process(BOOK + sampleShowNumber + " " + phoneNumberSample + " A100,B200");
 			fail();
 		}
 		catch (BookingException e)

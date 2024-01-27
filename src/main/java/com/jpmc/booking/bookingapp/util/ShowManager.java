@@ -12,7 +12,24 @@ public final class ShowManager
 	//~ Static fields/initializers ---------------
 	/**  */
 	private static ConcurrentHashMap<String, Show> shows = new ConcurrentHashMap<>();
+
+	/**  */
+	private static ShowManager showManager;
+	//~ Constructors -----------------------------
+	/** Creates a new ShowManager object. */
+	private ShowManager( ) { }
 	//~ Methods ----------------------------------
+	/** @return */
+	public static ShowManager getInstance()
+	{
+		if (showManager == null)
+		{
+			showManager = new ShowManager();
+		}
+
+		return showManager;
+	}
+	
 	/**
 	 * @param   showNumber
 	 * @param   numOfRows
@@ -20,8 +37,7 @@ public final class ShowManager
 	 * @param   cancelWindow
 	 * @throws  BookingException
 	 */
-	public static void setup(String showNumber, int numOfRows, int numOfSeatsPerRow, int cancelWindow)
-		throws BookingException
+	public void setup(String showNumber, int numOfRows, int numOfSeatsPerRow, int cancelWindow) throws BookingException
 	{
 		validateMaxSeats(numOfRows, numOfSeatsPerRow);
 		if (!shows.containsKey(showNumber))
@@ -39,7 +55,7 @@ public final class ShowManager
 	 * @param   numOfSeatsPerRow
 	 * @throws  BookingException
 	 */
-	private static void validateMaxSeats(int numOfRows, int numOfSeatsPerRow) throws BookingException
+	private void validateMaxSeats(int numOfRows, int numOfSeatsPerRow) throws BookingException
 	{
 		if (numOfRows > BookingConstant.MAX_SEAT_ROW)
 		{
@@ -55,7 +71,7 @@ public final class ShowManager
 	 * @param   showNumber
 	 * @return
 	 */
-	public static Show retrieveShow(String showNumber)
+	public Show retrieveShow(String showNumber)
 	{
 		return shows.get(showNumber);
 	}

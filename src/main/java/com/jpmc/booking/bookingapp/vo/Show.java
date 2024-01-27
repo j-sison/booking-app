@@ -39,7 +39,7 @@ public class Show
 	}
 	//~ Methods ----------------------------------
 	/** @return */
-	public ConcurrentHashMap<String, List<Booking>> getBookingList()
+	public Map<String, List<Booking>> getBookingList()
 	{
 		return bookingList;
 	}
@@ -67,7 +67,7 @@ public class Show
 	}
 	
 	/** @return */
-	public ConcurrentHashMap<String, Seat> getSeats()
+	public Map<String, Seat> getSeats()
 	{
 		return seats;
 	}
@@ -90,10 +90,11 @@ public class Show
 	}
 	
 	/** @return */
+	@SuppressWarnings("unused")
 	public List<Seat> getAvailableSeats()
 	{
-		List<Seat> availableSeats = seats.entrySet().stream().map(Map.Entry::getValue).filter(s -> s.isAvailable())
-				.collect(Collectors.toList());
+		List<Seat> availableSeats = seats.entrySet().stream().map(Map.Entry::getValue).filter(
+				Seat::<Boolean>isAvailable).collect(Collectors.toList());
 
 		availableSeats.sort((p1, p2) -> p1.getSeatNumber().compareToIgnoreCase(p2.getSeatNumber()));
 

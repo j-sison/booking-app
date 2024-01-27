@@ -1,5 +1,6 @@
-package com.jpmc.booking.bookingapp.ui;
+package com.jpmc.booking.bookingapp.ui.impl;
 
+import com.jpmc.booking.bookingapp.ui.AbstractMenu;
 import com.jpmc.booking.bookingapp.util.CommandValidator;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 
@@ -7,10 +8,9 @@ import java.io.IOException;
 
 
 /** @version  $Revision$, $Date$ */
-public class AdminMenu extends AbstractMenu
+public class BuyerMenu extends AbstractMenu
 {
 	//~ Methods ----------------------------------
-	/**  */
 	/** @see  com.jpmc.booking.bookingapp.ui.AbstractMenu#inputCommand() */
 	@Override
 	public void inputCommand()
@@ -23,9 +23,10 @@ public class AdminMenu extends AbstractMenu
 				"=======================================================================================================");
 			System.out.println("Available commands:");
 			System.out.println(
-				"*         Setup  <Show Number> <Number of Rows> <Number of seats per row>  <Cancellation window in minutes>");
-			System.out.println("*         View <Show Number>");
-			System.out.println("*         Quit");
+				"*\t\tAvailability <Show Number>");
+			System.out.println("*\t\tBook <Show Number> <Phone#> <Comma separated list of seats>");
+			System.out.println("*\t\tCancel <Ticket#> <Phone#>");
+			System.out.println("*\t\tQuit");
 			System.out.println(
 				"=======================================================================================================");
 			try
@@ -33,7 +34,7 @@ public class AdminMenu extends AbstractMenu
 				System.out.println("Please enter your command:");
 				String cmd = reader.readLine();
 				CommandValidator.validate(this, cmd);
-				processCommand(cmd);
+				processCommand(this, cmd);
 			}
 			catch (BookingException e)
 			{

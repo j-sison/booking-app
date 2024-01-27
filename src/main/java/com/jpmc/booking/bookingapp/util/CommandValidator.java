@@ -1,14 +1,18 @@
 package com.jpmc.booking.bookingapp.util;
 
 import com.jpmc.booking.bookingapp.ui.AbstractMenu;
-import com.jpmc.booking.bookingapp.ui.AdminMenu;
-import com.jpmc.booking.bookingapp.ui.BuyerMenu;
+import com.jpmc.booking.bookingapp.ui.impl.AdminMenu;
+import com.jpmc.booking.bookingapp.ui.impl.BuyerMenu;
 import com.jpmc.booking.bookingapp.util.exception.BookingException;
 
 
 /** @version  $Revision$, $Date$ */
 public final class CommandValidator
 {
+	//~ Constructors -----------------------------
+
+	/** Creates a new CommandValidator object. */
+	private CommandValidator( ) { }
 	//~ Methods ----------------------------------
 	/**
 	 * @param   cmdScreen
